@@ -6,7 +6,7 @@ namespace RegisterClient.Models
     {
         public int Id { get; set; }
         public string Cpf { get; set; }
-        public DateTime DataNasc { get; set; }
+        public string DataNasc { get; set; }
         public string Nome { get; set; }
         public string SobreNome { get; set; }
         public string Cep { get; set; }

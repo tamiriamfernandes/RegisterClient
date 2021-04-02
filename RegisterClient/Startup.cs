@@ -37,7 +37,8 @@ namespace RegisterClient
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<DBContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DBContext")));
+                    options.UseMySql(Configuration.GetConnectionString("DBContext"), builder => 
+                            builder.MigrationsAssembly("RegisterClient")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
