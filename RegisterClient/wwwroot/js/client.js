@@ -63,8 +63,6 @@ $(document).ready(function () {
     }
 
     function Validacao() {
-        var cpf_cnpj = $("#Cpf_Cnpj").val().replace(/[^0-9]/g, '');
-        var cep = $("#Cep").val().replace(/[^0-9]/g, '');
 
         if ($("#Tipo" == "F")) {
             //Valida Idade
