@@ -1,93 +1,66 @@
 ﻿@model IEnumerable<RegisterClient.Models.Client>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clientes";
 }
 
-<h2>Index</h2>
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-dark" asp-action="Create">Incluir</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Cpf)
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Id)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataNasc)
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Tipo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.RazaoSocial)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SobreNome)
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.NomeFantasia)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cep)
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Cpf_Cnpj)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Logradouro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Numero)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Complemento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bairro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cidade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Uf)
-            </th>
-            <th></th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Cpf)
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            @if (item.Tipo == "F")
+            {
+                <td>
+                    Física
+                </td>
+            }
+            else
+            {
+                <td>
+                    Jurídica
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.RazaoSocial)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DataNasc)
+                @Html.DisplayFor(modelItem => item.NomeFantasia)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => item.Cpf_Cnpj)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SobreNome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cep)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Logradouro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Numero)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Complemento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bairro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cidade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uf)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.Id">Visualizar</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
             </td>
         </tr>
 }

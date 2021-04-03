@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RegisterClient.Migrations
@@ -13,10 +14,11 @@ namespace RegisterClient.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Cpf = table.Column<string>(nullable: true),
-                    DataNasc = table.Column<string>(nullable: true),
-                    Nome = table.Column<string>(nullable: true),
-                    SobreNome = table.Column<string>(nullable: true),
+                    Tipo = table.Column<string>(nullable: true),
+                    RazaoSocial = table.Column<string>(nullable: true),
+                    NomeFantasia = table.Column<string>(nullable: true),
+                    Cpf_Cnpj = table.Column<string>(nullable: true),
+                    DataNasc = table.Column<DateTime>(nullable: false),
                     Cep = table.Column<string>(nullable: true),
                     Logradouro = table.Column<string>(nullable: true),
                     Numero = table.Column<string>(nullable: true),

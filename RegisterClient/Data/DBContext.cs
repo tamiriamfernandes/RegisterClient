@@ -14,6 +14,6 @@ namespace RegisterClient.Data
         {
         }
 
-        public DbSet<RegisterClient.Models.Client> Client { get; set; }
+        public DbSet<Client> Client { get; set; }
     }
 }

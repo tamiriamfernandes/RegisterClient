@@ -11,6 +11,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RegisterClient.Data;
+using RegisterClient.Services;
+using RegisterClient.Services.Interface;
 
 namespace RegisterClient
 {
@@ -39,6 +41,8 @@ namespace RegisterClient
             services.AddDbContext<DBContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("DBContext"), builder => 
                             builder.MigrationsAssembly("RegisterClient")));
+
+            services.AddScoped<IClientService,ClientService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +66,7 @@ namespace RegisterClient
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Clients}/{action=Index}/{id?}");
             });
         }
     }

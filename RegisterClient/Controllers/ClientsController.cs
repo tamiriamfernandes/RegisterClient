@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,38 +8,49 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RegisterClient.Data;
 using RegisterClient.Models;
+using RegisterClient.Models.ViewModels;
+using RegisterClient.Services;
+using RegisterClient.Services.Exceptions;
+using RegisterClient.Services.Interface;
 
 namespace RegisterClient.Controllers
 {
     public class ClientsController : Controller
     {
-        private readonly DBContext _context;
+        private readonly IClientService clientService;
 
-        public ClientsController(DBContext context)
+        public ClientsController(IClientService clientService)
         {
-            _context = context;
+            this.clientService = clientService;
         }
 
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Client.ToListAsync());
+            var listClient = clientService.FindAll();
+            return View(listClient);
         }
 
         // GET: Clients/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
             }
 
-            var client = await _context.Client
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var client = clientService.FindById((int)id);
             if (client == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
             }
+
+            var list = new[]
+            {
+                new SelectListItem { Value = "F", Text = "Física" },
+                new SelectListItem { Value = "J", Text = "Juridica" },
+            };
+            ViewBag.Lista = new SelectList(list, "Value", "Text");
 
             return View(client);
         }
@@ -46,23 +58,22 @@ namespace RegisterClient.Controllers
         // GET: Clients/Create
         public IActionResult Create()
         {
+            var list = new[]
+            {
+                new SelectListItem { Value = "F", Text = "Física" },
+                new SelectListItem { Value = "J", Text = "Juridica" },
+            };
+
+            ViewBag.Lista = new SelectList(list, "Value", "Text");
             return View();
         }
 
-        // POST: Clients/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Cpf,DataNasc,Nome,SobreNome,Cep,Logradouro,Numero,Complemento,Bairro,Cidade,Uf")] Client client)
+        public IActionResult Create(Client client)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(client);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(client);
+            clientService.Insert(client);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Clients/Edit/5
@@ -70,50 +81,43 @@ namespace RegisterClient.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
             }
 
-            var client = await _context.Client.FindAsync(id);
+            var client = clientService.FindById((int)id);
             if (client == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Cliente não encontrado!" });
             }
+
+            var list = new[]
+            {
+                new SelectListItem { Value = "F", Text = "Física" },
+                new SelectListItem { Value = "J", Text = "Juridica" },
+            };
+
+            ViewBag.Lista = new SelectList(list, "Value", "Text");
             return View(client);
         }
 
-        // POST: Clients/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Cpf,DataNasc,Nome,SobreNome,Cep,Logradouro,Numero,Complemento,Bairro,Cidade,Uf")] Client client)
+        public async Task<IActionResult> Edit(int id, Client client)
         {
             if (id != client.Id)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não corresponde!" });
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(client);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClientExists(client.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                clientService.Update(client);
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            catch (ApplicationException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
         // GET: Clients/Delete/5
@@ -121,14 +125,13 @@ namespace RegisterClient.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
             }
 
-            var client = await _context.Client
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var client = clientService.FindById((int)id);
             if (client == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Cliente não encontrado!" });
             }
 
             return View(client);
@@ -137,17 +140,26 @@ namespace RegisterClient.Controllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var client = await _context.Client.FindAsync(id);
-            _context.Client.Remove(client);
-            await _context.SaveChangesAsync();
+            clientService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClientExists(int id)
+        public IActionResult About()
         {
-            return _context.Client.Any(e => e.Id == id);
+            ViewData["Message"] = "Your application description page.";
+
+            return View();
+        }
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
     }
 }
