@@ -63,17 +63,24 @@ $(document).ready(function () {
     }
 
     function Validacao() {
-        var datanasc = $('#DataNasc').val();
-        datanasc = new Date(datanasc);
-        if (datanasc != '') {
-            var data = new Date();
-            var idade = Math.floor((data - datanasc) / (365.25 * 24 * 60 * 60 * 1000));
+        var cpf_cnpj = $("#Cpf_Cnpj").val().replace(/[^0-9]/g, '');
+        var cep = $("#Cep").val().replace(/[^0-9]/g, '');
 
-            if (idade <= 19) {
-                alert("A idade permitida para cadastro deve ser no mínimo 19 anos.");
-                return false;
+        if ($("#Tipo" == "F")) {
+            //Valida Idade
+            var datanasc = $('#DataNasc').val();
+            datanasc = new Date(datanasc);
+            if (datanasc != '') {
+                var data = new Date();
+                var idade = Math.floor((data - datanasc) / (365.25 * 24 * 60 * 60 * 1000));
+
+                if (idade <= 19) {
+                    alert("A idade permitida para cadastro deve ser no mínimo 19 anos.");
+                    $("#DataNasc").focus();
+                    return false;
+                }
+                return true;
             }
-            return true;
         }
     }
 });

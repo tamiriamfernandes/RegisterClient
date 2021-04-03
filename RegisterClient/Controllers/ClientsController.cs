@@ -24,37 +24,13 @@ namespace RegisterClient.Controllers
             this.clientService = clientService;
         }
 
+        #region GET
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-            var listClient = clientService.FindAll();
+            var listClient = await clientService.FindAllAsync();
             return View(listClient);
         }
-
-        // GET: Clients/Details/5
-        public IActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
-            }
-
-            var client = clientService.FindById((int)id);
-            if (client == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
-            }
-
-            var list = new[]
-            {
-                new SelectListItem { Value = "F", Text = "Física" },
-                new SelectListItem { Value = "J", Text = "Juridica" },
-            };
-            ViewBag.Lista = new SelectList(list, "Value", "Text");
-
-            return View(client);
-        }
-
         // GET: Clients/Create
         public IActionResult Create()
         {
@@ -67,16 +43,7 @@ namespace RegisterClient.Controllers
             ViewBag.Lista = new SelectList(list, "Value", "Text");
             return View();
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Client client)
-        {
-            clientService.Insert(client);
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Clients/Edit/5
+        // GET: Clients/Edit/
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,7 +51,7 @@ namespace RegisterClient.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
             }
 
-            var client = clientService.FindById((int)id);
+            var client = await clientService.FindByIdAsync((int)id);
             if (client == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Cliente não encontrado!" });
@@ -99,28 +66,7 @@ namespace RegisterClient.Controllers
             ViewBag.Lista = new SelectList(list, "Value", "Text");
             return View(client);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Client client)
-        {
-            if (id != client.Id)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id não corresponde!" });
-            }
-
-            try
-            {
-                clientService.Update(client);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (ApplicationException e)
-            {
-                return RedirectToAction(nameof(Error), new { message = e.Message });
-            }
-        }
-
-        // GET: Clients/Delete/5
+        // GET: Clients/Delete/
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,23 +74,80 @@ namespace RegisterClient.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
             }
 
-            var client = clientService.FindById((int)id);
+            var client = await clientService.FindByIdAsync((int)id);
             if (client == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Cliente não encontrado!" });
             }
 
+            var list = new[]
+            {
+                new SelectListItem { Value = "F", Text = "Física" },
+                new SelectListItem { Value = "J", Text = "Juridica" },
+            };
+            ViewBag.Lista = new SelectList(list, "Value", "Text");
+
             return View(client);
         }
+        // GET: Clients/Details/
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
+            }
 
+            var client = await clientService.FindByIdAsync((int)id);
+            if (client == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado!" });
+            }
+
+            var list = new[]
+            {
+                new SelectListItem { Value = "F", Text = "Física" },
+                new SelectListItem { Value = "J", Text = "Juridica" },
+            };
+            ViewBag.Lista = new SelectList(list, "Value", "Text");
+
+            return View(client);
+        }
+        #endregion
+
+        #region POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Client client)
+        {
+            await clientService.InsertAsync(client);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Client client)
+        {
+            if (id != client.Id)
+                return RedirectToAction(nameof(Error), new { message = "Id não corresponde!" });
+
+            try
+            {
+                await clientService.UpdateAsync(client);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ApplicationException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
+        }
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            clientService.Delete(id);
+            await clientService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
         public IActionResult About()
         {

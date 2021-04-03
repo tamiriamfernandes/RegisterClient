@@ -1,87 +1,75 @@
 ﻿@model RegisterClient.Models.Client
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Cadastro de Cliente - Excluír";
 }
 
-<h2>Delete</h2>
+<h2>@ViewData["Title"]</h2>
+<h5>Confirma a exclusão do cadastro?</h5>
+<hr />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Client</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Cpf_Cnpj)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cpf_Cnpj)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DataNasc)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DataNasc)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RazaoSocial)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RazaoSocial)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NomeFantasia)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NomeFantasia)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cep)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cep)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Logradouro)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Logradouro)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Numero)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Numero)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Complemento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Complemento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Bairro)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Bairro)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cidade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cidade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Uf)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Uf)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-row">
+        <div class="form-group">
+            <label asp-for="Tipo">Tipo Cliente</label>
+            @Html.DropDownList("Tipo", ViewBag.Lista as IEnumerable<SelectListItem>, new { @class = "form-control", @disabled = "disabled" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="RazaoSocial" id="lblRazaoSocial" class="control-label">Nome</label>
+            <input asp-for="RazaoSocial" class="form-control" disabled/>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="NomeFantasia" id="lblNomeFantasia" class="control-label">Sobrenome</label>
+            <input asp-for="NomeFantasia" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label asp-for="Cpf_Cnpj" id="lblCpf_Cnpj" class="control-label">CPF</label>
+            <input asp-for="Cpf_Cnpj" class="form-control" disabled/>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="DataNasc" id="lblDataNasc" class="control-label">Data Nascimento</label>
+            <input asp-for="DataNasc" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label asp-for="Cep" class="control-label"></label>
+            <input asp-for="Cep" class="form-control" disabled/>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Logradouro" class="control-label"></label>
+            <input asp-for="Logradouro" class="form-control" disabled/>
+        </div>
+        <div class="form-group col-md-2">
+            <label asp-for="Numero" class="control-label"></label>
+            <input asp-for="Numero" class="form-control" disabled/>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Bairro" class="control-label"></label>
+            <input asp-for="Bairro" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Complemento" class="control-label"></label>
+        <input asp-for="Complemento" class="form-control" disabled/>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-10">
+            <label asp-for="Cidade" class="control-label"></label>
+            <input asp-for="Cidade" class="form-control" disabled/>
+        </div>
+        <div class="form-group col-md-2">
+            <label asp-for="Uf" class="control-label"></label>
+            <input asp-for="Uf" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Deletar" class="btn btn-danger" />
+        <a class="btn btn-primary" asp-action="Index">Voltar</a>
+    </div>
+</form>

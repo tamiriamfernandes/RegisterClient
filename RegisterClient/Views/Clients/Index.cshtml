@@ -7,7 +7,7 @@
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a class="btn btn-dark" asp-action="Create">Incluir</a>
+    <a class="btn btn-primary" asp-action="Create">Incluir</a>
 </p>
 <table class="table table-striped">
     <thead class="thead-dark">
@@ -58,8 +58,8 @@
                 @Html.DisplayFor(modelItem => item.Cpf_Cnpj)
             </td>
             <td>
-                <a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.Id">Visualizar</a> |
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Alterar</a> |
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Visualizar</a> |
                 <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
             </td>
         </tr>

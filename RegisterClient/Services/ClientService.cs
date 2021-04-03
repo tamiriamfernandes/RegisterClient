@@ -19,38 +19,39 @@ namespace RegisterClient.Services
             this.dBContext = dBContext;
         }
 
-        public List<Client> FindAll()
+        public async Task<List<Client>> FindAllAsync()
         {
-            return dBContext.Client.ToList();
+            return await dBContext.Client.ToListAsync();
         }
 
-        public void Insert(Client client)
+        public async Task InsertAsync(Client client)
         {
             dBContext.Add(client);
-            dBContext.SaveChanges(); 
+            await dBContext.SaveChangesAsync(); 
         }
 
-        public Client FindById(int id)
+        public async Task<Client> FindByIdAsync(int id)
         {
-            return dBContext.Client.Where(c => c.Id == id).FirstOrDefault();
+            return await dBContext.Client.Where(c => c.Id == id).FirstOrDefaultAsync();
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var client = dBContext.Client.Find(id);
+            var client = await dBContext.Client.FindAsync(id);
             dBContext.Client.Remove(client);
-            dBContext.SaveChanges();
+            await dBContext.SaveChangesAsync();
         }
 
-        public void Update(Client client)
+        public async Task UpdateAsync(Client client)
         {
-            if(!dBContext.Client.Any(c => c.Id == client.Id))
+            bool existe = await dBContext.Client.AnyAsync(c => c.Id == client.Id);
+            if (!existe)
                 throw new NotFoundException("Cliente não encontrado!");
 
             try
             {
                 dBContext.Update(client);
-                dBContext.SaveChanges();
+                await dBContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {
